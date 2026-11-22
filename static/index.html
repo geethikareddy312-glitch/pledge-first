@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pledge First</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F2E8;--surface:#FFFFFF;--ink:#263D32;--muted:#68776C;--line:#E5E1D5;--brand:#315C4C;--brand-ink:#FFFFFF;--accent:#D98263;--go:#477A58;--stop:#C45D4D;--wait:#A66A2B;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#17231C;--surface:#202F26;--ink:#F0F5EE;--muted:#B2C0B3;--line:#35483A;--brand:#A8BFA3;--brand-ink:#17231C;--accent:#E6A18B;--go:#83D5A0;--stop:#FF9B8D;--wait:#F0C078}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#17231C;--surface:#202F26;--ink:#F0F5EE;--muted:#B2C0B3;--line:#35483A;--brand:#A8BFA3;--brand-ink:#17231C;--accent:#E6A18B;--go:#83D5A0;--stop:#FF9B8D;--wait:#F0C078}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3,.logo{font-family:"Bricolage Grotesque",Figtree,system-ui,sans-serif;margin:0;line-height:1.15}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.nav{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.nav-in{max-width:1040px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{font-size:1.4rem;font-weight:800;color:var(--brand);display:flex;align-items:center;gap:8px}
+.logo i{width:26px;height:26px;border-radius:7px;background:var(--brand);display:inline-block;position:relative}
+.logo i:after{content:"";position:absolute;left:7px;top:6px;width:12px;height:7px;border-left:3px solid var(--brand-ink);border-bottom:3px solid var(--brand-ink);transform:rotate(-45deg)}
+.links{display:flex;gap:4px;flex:1}
+.link{background:none;border:0;color:var(--muted);font-weight:600;padding:8px 12px;border-radius:8px}
+.link[aria-current="page"]{color:var(--ink);background:var(--bg)}
+.who{display:flex;align-items:center;gap:10px;font-size:.92rem}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:700}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;border-radius:8px;padding:9px 16px;font-weight:600}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.btn.done{background:var(--bg);color:var(--go);border:1px solid var(--go)}
+.btn:disabled{opacity:.55;cursor:default}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 20px 60px}
+.top{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.top h1{font-size:1.8rem;font-weight:800}
+.stats{display:flex;gap:22px;color:var(--muted);font-size:.9rem}
+.stats b{color:var(--ink);font-size:1.15rem;margin-right:4px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 14px;border-radius:999px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pic{height:130px;display:grid;place-items:center;font-size:3.4rem;position:relative}
+.tag{position:absolute;top:10px;left:10px;background:var(--surface);color:var(--ink);font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:999px}
+.badge{position:absolute;top:10px;right:10px;font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--surface)}
+.badge.go{color:var(--go)}.badge.stop{color:var(--stop)}.badge.wait{color:var(--wait)}
+.body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+.body h3{font-size:1.2rem}
+.sub{color:var(--muted);font-size:.92rem;margin:0}
+.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--brand);transition:width .5s ease}
+.go .bar>i{background:var(--go)}
+.row{display:flex;justify-content:space-between;font-size:.9rem}
+.price{font-weight:700}
+.est{font-size:.84rem;color:var(--muted)}
+.acts{display:flex;gap:8px;margin-top:auto}
+.acts .btn:first-child{flex:1}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px;max-width:560px;display:grid;gap:14px}
+label{display:grid;gap:5px;font-weight:600;font-size:.92rem}
+input,select,textarea{font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.note{color:var(--muted);font-size:.88rem;margin:0}
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.steps .panel{max-width:none}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:24px;width:min(380px,92vw)}
+dialog::backdrop{background:rgba(10,12,24,.8);backdrop-filter:blur(10px)}
+dialog form{display:grid;gap:14px}
+.card{cursor:pointer}
+#idlg{width:min(640px,94vw);max-height:90vh;overflow:auto}
+.ihead{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.ihead .em{width:64px;height:64px;border-radius:12px;display:grid;place-items:center;font-size:2rem;flex:none}
+.sec{margin:16px 0 0}.sec h3{font-size:1rem;margin-bottom:4px}
+.label{border:2px solid var(--ink);border-radius:8px;padding:8px 14px;margin-top:6px;font-size:.9rem}
+.label table{width:100%;border-collapse:collapse}
+.label td{padding:5px 0;border-bottom:1px solid var(--line)}
+.label tr:last-child td{border-bottom:0}
+.label td:last-child{text-align:right;font-weight:600;padding-left:12px}
+dialog.auth{padding:0;width:min(780px,94vw);overflow:hidden}
+.auth-in{display:grid;grid-template-columns:1fr 1.15fr}
+.auth-side{background:linear-gradient(145deg,#315C4C,#6F9277);color:#fff;padding:32px 28px;display:flex;flex-direction:column;gap:22px;justify-content:center}
+.auth-side .logo{color:#fff}
+.auth-side .logo i{background:#fff}
+.auth-side .logo i:after{border-color:#315C4C}
+.auth-side h2{font-size:1.7rem;font-weight:800}
+.auth-side ul{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.auth-side li{display:flex;gap:10px;align-items:center}
+.auth-side li:before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;flex:none}
+.auth-form{padding:32px 28px;display:grid;gap:14px;align-content:center}
+.auth-form h2{font-size:1.5rem}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.role{display:block;position:relative;font-weight:inherit}
+.role input{position:absolute;opacity:0;pointer-events:none}
+.rc{display:grid;gap:2px;border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;height:100%}
+.rc small{color:var(--muted);font-weight:400;font-size:.8rem}
+.role input:checked+.rc{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 9%,var(--surface))}
+.role input:focus-visible+.rc{outline:3px solid var(--brand);outline-offset:2px}
+.btn.big{padding:12px 16px;font-size:1rem}
+@media (max-width:640px){.auth-in{grid-template-columns:1fr}.auth-side{padding:20px 22px;gap:10px}.auth-side h2{font-size:1.3rem}.auth-side ul{display:none}.roles{grid-template-columns:1fr}}
+/* Founder analytics dashboard */
+.eyebrow{font-size:.75rem;letter-spacing:.14em;font-weight:800;color:var(--brand);margin:0 0 8px}
+.analytics-top{margin-bottom:18px}
+.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 18px}
+.metric-card,.analytics-panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+.metric-card{display:grid;gap:7px}.metric-card span{color:var(--muted);font-size:.88rem;font-weight:600}.metric-card strong{font:800 2rem/1 "Bricolage Grotesque",sans-serif;color:var(--brand)}
+.analytics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.analytics-panel h2{font-size:1.15rem;margin-bottom:5px}.analytics-panel>.note{margin-bottom:16px}
+.trend-chart{height:190px;display:flex;align-items:stretch;gap:12px;padding-top:12px}
+.trend-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0}.trend-col strong{font-size:.82rem}.trend-col span{font-size:.78rem;color:var(--muted)}
+.trend-track{height:130px;width:100%;max-width:42px;background:var(--bg);border-radius:9px 9px 4px 4px;display:flex;align-items:end;overflow:hidden;margin-top:auto}.trend-track i{display:block;width:100%;min-height:4px;background:linear-gradient(180deg,var(--accent),var(--brand));border-radius:8px 8px 3px 3px}
+.category-row,.product-analytics{display:grid;gap:8px;margin:14px 0}.category-row .row,.product-analytics .row{gap:10px}.category-row .row span,.product-analytics small{color:var(--muted);font-size:.82rem}
+.prediction-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}.prediction-row:last-of-type{border-bottom:0}.prediction-copy{display:grid;gap:3px;min-width:0}.prediction-copy span{font-size:.82rem;color:var(--muted)}.prediction-score{width:105px;flex:none;display:grid;gap:5px;text-align:right}.prediction-score strong{color:var(--brand)}
+.disclaimer{font-size:.78rem;color:var(--muted);background:var(--bg);border-left:3px solid var(--accent);padding:10px 12px;border-radius:0 8px 8px 0;margin:14px 0 0}.demo-note{margin-top:14px}
+.nav-in{position:relative}
+.notify-wrap{position:relative}
+.notify-btn{position:relative;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700}
+.notify-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;margin-left:4px;border-radius:999px;background:var(--accent);color:#fff;font-size:.72rem}
+.notify-panel{position:absolute;right:0;top:calc(100% + 12px);width:min(370px,calc(100vw - 28px));max-height: min(480px,70vh);overflow:auto;z-index:20;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 18px 50px rgba(20,35,25,.18)}
+.notify-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.notify-head h3{font-size:1.05rem}
+.notify-item{display:block;width:100%;text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:11px;margin:8px 0}
+.notify-item.unread{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%,var(--surface))}
+.notify-item small{display:block;color:var(--muted);margin-top:5px}
+.notify-empty{padding:18px 8px;text-align:center;color:var(--muted);font-size:.9rem}
+.notify-readall{border:0;background:none;color:var(--brand);font:inherit;font-size:.82rem;font-weight:700;cursor:pointer}
+@media(max-width:640px){.notify-panel{right:-70px}}
+@media(max-width:760px){.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.metric-card{padding:14px}.metric-card strong{font-size:1.65rem}}
+[hidden]{display:none!important}
+.seg{display:flex;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10}
+.toast.on{opacity:1}
+@media (max-width:640px){.two{grid-template-columns:1fr}.links{order:3;flex-basis:100%;overflow-x:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Pledge First — friendly & creative visual refresh */
+:root{
+  color-scheme:light;
+  --bg:#F7F2E8;--surface:#FFFFFF;--ink:#263D32;--muted:#68776C;
+  --line:#E5E1D5;--brand:#315C4C;--brand-ink:#FFFFFF;
+  --go:#477A58;--stop:#C45D4D;--wait:#A66A2B;
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#17231C;--surface:#202F26;--ink:#F0F5EE;
+  --muted:#B2C0B3;--line:#35483A;--brand:#A8BFA3;--brand-ink:#17231C;
+  --go:#83D5A0;--stop:#FF9B8D;--wait:#F0C078;
+}
+body{
+  background:radial-gradient(ellipse at 8% 0%,rgba(168,191,163,.28),transparent 34%),var(--bg);
+}
+.nav{background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px)}
+.nav-in{max-width:1160px;padding-top:15px;padding-bottom:15px}
+.logo{color:var(--brand);letter-spacing:-.04em}
+.logo i{border-radius:9px;background:var(--brand)}
+.link{border-radius:999px;padding:9px 14px}
+.link[aria-current="page"]{background:#E9EFE3;color:#315C4C}
+.wrap{max-width:1160px;padding-top:30px}
+.top{
+  align-items:center;background:linear-gradient(120deg,#F7F2E8 0%,#F3EFE4 55%,#E5EDE1 100%);
+  border:1px solid #E5E1D5;border-radius:24px;padding:30px;gap:22px;margin-bottom:22px;
+}
+.hero-copy{max-width:490px}
+.top h1{font-size:clamp(1.8rem,4vw,2.65rem);letter-spacing:-.045em;color:#263D32}
+.hero-sub{max-width:44ch;margin:10px 0 0;color:#68776C;font-size:1rem}
+.stats{gap:18px;flex-wrap:wrap;color:#68776C}
+.stats b{color:#263D32;font-size:1.35rem}
+.filters{gap:9px;margin-bottom:20px}
+.chip{border-radius:999px;padding:8px 16px;background:var(--surface);border-color:var(--line)}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+.grid{gap:20px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.card{border-radius:20px;border-color:var(--line);box-shadow:0 5px 18px rgba(38,61,50,.055);transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(38,61,50,.11)}
+.pic{height:154px;font-size:3.8rem}
+.tag,.badge{border-radius:999px;padding:5px 11px}
+.body{padding:19px;gap:12px}
+.body h3{font-size:1.28rem;letter-spacing:-.02em}
+.bar{height:11px;border-radius:999px;background:#E9EFE3}
+.bar>i{border-radius:999px;background:linear-gradient(90deg,#A8BFA3,#315C4C)}
+.btn{border-radius:999px;padding:10px 18px;background:var(--brand);box-shadow:0 3px 8px rgba(39,103,73,.12);transition:transform .15s ease,filter .15s ease}
+.btn:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-1px)}
+.btn.ghost{box-shadow:none;border-radius:999px}
+.btn.done{box-shadow:none}
+.panel{border-radius:20px;border-color:var(--line);padding:24px;box-shadow:0 5px 18px rgba(38,61,50,.045)}
+input,select,textarea{border-radius:12px;background:var(--surface)}
+input:focus,select:focus,textarea:focus{border-color:var(--brand)}
+dialog{border-radius:22px;box-shadow:0 24px 80px rgba(20,35,25,.22)}
+.auth-side{background:linear-gradient(155deg,#315C4C,#527A5D);}
+.auth-side .logo i{background:#fff}
+.auth-side .logo i:after{border-color:#315C4C}
+.roles .rc{border-radius:14px}
+#idlg{border-radius:22px}
+.label{border-radius:12px}
+.toast{border-radius:999px;background:#263D32;color:#fff}
+@media(max-width:640px){
+  .wrap{padding:18px 14px 48px}
+  .top{padding:22px;border-radius:20px;align-items:flex-start}
+  .stats{width:100%;justify-content:space-between;gap:10px;font-size:.8rem}
+  .stats b{font-size:1.1rem}
+  .hero-sub{font-size:.94rem}
+  .nav-in{padding-left:14px;padding-right:14px}
+}
+@media(prefers-reduced-motion:reduce){.card,.btn{transition:none}}
+
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-in">
+  <div class="logo"><i></i>Pledge First</div>
+  <div class="links">
+    <button class="link" data-view="explore" aria-current="page">Explore</button>
+    <button class="link" data-view="list">List a product</button>
+    <button class="link" data-view="founder">Founder dashboard</button>
+    <button class="link" data-view="analytics">AI analytics</button>
+    <button class="link" data-view="how">How it works</button>
+  </div>
+  <div class="who" id="who"></div>
+  <div class="notify-panel" id="notificationPanel" hidden></div>
+</div></nav>
+
+<main class="wrap">
+  <section id="explore">
+    <div class="top">
+      <div class="hero-copy">
+        <h1>Great products start with your yes</h1>
+        <p class="hero-sub">Discover fresh ideas, support the ones you love, and help bring tomorrow’s favourites to life.</p>
+      </div>
+      <div class="stats"><span><b id="s1">0</b>live concepts</span><span><b id="s2">0</b>goals reached</span><span><b id="s3">0</b>pledges</span></div>
+    </div>
+    <div id="updates"></div>
+    <section id="recommendations" class="panel" style="max-width:none;margin-bottom:18px" hidden></section>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="list"></div>
+  </section>
+
+  <section id="list-view" hidden>
+    <form class="panel" id="f">
+      <h2>List a product concept</h2>
+      <label>Product name<input id="fn" required maxlength="40" placeholder="e.g. Raw Banana Chips"></label>
+      <div class="two">
+        <label>Category<select id="fc"><option>Snacks</option><option>Beverages</option><option>Personal care</option><option>Home</option></select></label>
+        <label>Price per pack (₹)<input id="fp" type="number" min="5" max="2000" required value="30"></label>
+      </div>
+      <div class="two">
+        <label>Pledges needed<input id="fg" type="number" min="2" max="5000" required value="200"></label>
+        <label>Factory cost at risk (₹)<input id="fk" type="number" min="1000" step="1000" required value="150000"></label>
+      </div>
+      <label>Short description<textarea id="fd" rows="2" maxlength="120" placeholder="What makes it different?"></textarea></label>
+      <label>How it is made (optional)<textarea id="fh" rows="2" maxlength="300"></textarea></label>
+      <label>Ingredients or materials (optional)<textarea id="fi" rows="2" maxlength="300"></textarea></label>
+      <label>Packaging (optional)<textarea id="fpk" rows="2" maxlength="300"></textarea></label>
+      <button class="btn" type="submit">Publish concept</button>
+      <p class="note">Nothing is made or charged. Your concept appears on Explore so you can watch pledges come in.</p>
+    </form>
+  </section>
+
+  <section id="founder-view" hidden>
+    <h1 style="font-size:1.6rem;margin-bottom:6px">Founder dashboard</h1>
+    <p class="note" style="margin-bottom:16px;max-width:64ch">These are the products you listed. When one reaches its goal it goes into production. Once it is made, mark it here and every backer is told it is ready and can then pay. Only the owner of a product can mark it.</p>
+    <div id="fl" style="display:grid;gap:12px"></div>
+  </section>
+
+  <section id="analytics-view" hidden>
+    <div class="top analytics-top">
+      <div class="hero-copy"><p class="eyebrow">FOUNDER INSIGHTS</p><h1>Understand your demand</h1>
+        <p class="hero-sub">A live view of pledges and campaign progress across the products you listed.</p></div>
+      <button class="btn" id="refreshAnalytics" type="button">Refresh insights</button>
+    </div>
+    <div id="analyticsContent" aria-live="polite"><p class="note">Loading your analytics…</p></div>
+  </section>
+
+
+  <section id="how" hidden>
+    <div class="steps">
+      <div class="panel"><h3>Founders list an idea</h3><p class="note">Name, price, a pledge goal and the factory cost they would otherwise risk.</p></div>
+      <div class="panel"><h3>Customers pledge once</h3><p class="note">Sign in, then tap “I would like to buy it”. It is free: nothing is charged at this stage. One pledge per person per product, with an early-bird price 15% off.</p></div>
+      <div class="panel"><h3>Goal reached: sent for production</h3><p class="note">Everyone who pledged is told the product is going into production. They pay nothing yet.</p></div>
+      <div class="panel"><h3>Made: backers pay</h3><p class="note">Once the product is manufactured, backers are told it is ready and pay the early-bird price to get it. They only pay for something that really exists.</p></div>
+      <div class="panel"><h3>Goal missed: it ends cheaply</h3><p class="note">The founder changes or drops the idea with no money spent on production, and backers are never charged.</p></div>
+    </div>
+    <p class="note" style="margin-top:18px;max-width:70ch">The “chance of reaching goal” on each card comes from a logistic regression model (price vs category average, goal size, share pledged so far, day of 7). It was trained on synthetic data, so it shows the method and is not a real forecast. Payment is a classroom simulation only: no real money moves and no payment gateway is connected.</p>
+  </section>
+</main>
+
+<dialog id="dlg" class="auth">
+  <div class="auth-in">
+    <aside class="auth-side">
+      <div class="logo"><i></i>Pledge First</div>
+      <h2>Great products start with your yes</h2>
+      <ul><li>Back products before they are made</li><li>Get an early-bird price</li><li>Pay only after it is made</li></ul>
+    </aside>
+    <form id="lf" method="dialog" class="auth-form">
+      <div><h2 id="atitle">Welcome back</h2><p class="note" style="margin-top:4px">Sign in to back new products early, or to find out if people want yours.</p></div>
+      <div class="seg" id="seg"><button type="button" class="chip" data-m="in" aria-pressed="true">Sign in</button><button type="button" class="chip" data-m="up" aria-pressed="false">Create account</button></div>
+      <div class="roles" id="rolebox" hidden>
+        <label class="role"><input type="radio" name="role" value="customer" checked><span class="rc"><b>🛍️ Customer</b><small>Browse and back new products</small></span></label>
+        <label class="role"><input type="radio" name="role" value="business"><span class="rc"><b>🏭 Business owner</b><small>List ideas and track demand</small></span></label>
+      </div>
+      <label id="nbox" hidden>Your name<input id="ln" maxlength="30" autocomplete="name"></label>
+      <label>Email<input id="le" type="email" required autocomplete="email"></label>
+      <label>Password<input id="lp" type="password" required minlength="8" autocomplete="current-password"></label>
+      <p id="aerr" class="note" role="alert" style="color:var(--stop);min-height:1.2em;margin:0"></p>
+      <button class="btn big" type="submit">Continue</button>
+    </form>
+  </div>
+</dialog>
+<dialog id="idlg"></dialog>
+<dialog id="paydlg" class="auth"><div class="auth-in"><h2>Demo checkout</h2><p class="note">This is a classroom simulation. No real payment is processed and no card or bank details are collected.</p><label>Choose a demo payment method<select id="demoMethod"><option>UPI demo</option><option>Card demo</option><option>Cash on delivery demo</option></select></label><div class="acts" style="margin-top:16px"><button class="btn ghost" id="cancelPay" type="button">Cancel</button><button class="btn" id="confirmPay" type="button">Complete demo payment</button></div></div></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var ICON={"Snacks":"\uD83E\uDD54","Beverages":"\uD83E\uDDCB","Personal care":"\uD83E\uDDF4","Home":"\uD83C\uDFE0"};
+var TINT={"Snacks":"#F4DDD3","Beverages":"#E0EBDD","Personal care":"#EEE6DC","Home":"#E5EDE1"};
+var user=null,items=[],mine=[],notes=[],analytics=null,cat="All",mode="in",pendingPayId=null,pendingAction=null;
+var ROLE_VIEWS={customer:["explore","how"],business:["explore","list","founder","analytics","how"]};
+function $(id){return document.getElementById(id)}
+function esc(t){var d=document.createElement("div");d.textContent=t==null?"":t;return d.innerHTML}
+function toast(m){var t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(function(){t.classList.remove("on")},2400)}
+async function api(method,path,body){
+ try{
+  var r=await fetch(path,{method:method,headers:body?{"Content-Type":"application/json"}:{},body:body?JSON.stringify(body):undefined,credentials:"same-origin"});
+  var d=await r.json().catch(function(){return{}});
+  return{ok:r.ok,status:r.status,data:d};
+ }catch(e){return{ok:false,status:0,data:{error:"Cannot reach the server. Is it still running?"}}}
+}
+function label(it){
+ if(it.status==="collecting")return["wait",it.days_left+" days left"];
+ if(it.status==="in_production")return["go","Goal reached"];
+ if(it.status==="made")return["go","Made"];
+ return["stop","Missed goal"];
+}
+function act(it){
+ if(it.is_owner)return'<button class="btn done" disabled>Your product</button>';
+ if(it.you_pledged){
+  if(it.you_paid)return'<button class="btn done" disabled>Paid · shipping soon</button>';
+  if(it.status==="made")return'<button class="btn" data-a="pay" data-id="'+it.id+'">Pay ₹'+it.early_bird_price+' to get it</button>';
+  if(it.status==="in_production")return'<button class="btn done" disabled>Sent for production</button>';
+  return'<button class="btn done" disabled>Pledged</button>';
+ }
+ return'<button class="btn" data-a="pledge" data-id="'+it.id+'"'+(it.status==="collecting"?"":" disabled")+'>I would like to buy it</button>';
+}
+function renderWho(){
+ $("who").innerHTML=user?'<button class="notify-btn" id="notifyToggle" type="button" aria-expanded="false" aria-controls="notificationPanel">🔔 Notifications <span class="notify-count" id="notifyCount">0</span></button><span class="avatar">'+esc(user.name.charAt(0).toUpperCase())+'</span><span>'+esc(user.name)+' <small style="color:var(--muted)">· '+(user.role==="business"?"Business owner":"Customer")+'</small></span><button class="btn ghost" id="out">Sign out</button>':'<button class="btn" id="in">Sign in</button>';
+ renderNotifications();
+}
+function renderNotifications(){
+ var panel=$("notificationPanel");if(!panel)return;
+ var unread=notes.filter(function(n){return !n.read_at}).length;
+ var count=$("notifyCount");if(count){count.textContent=unread>99?"99+":unread;count.hidden=unread===0}
+ if(!user){panel.hidden=true;panel.innerHTML="";return}
+ var list=notes.length?notes.map(function(n){var date=new Date(n.created_at*1000).toLocaleString();return'<button type="button" class="notify-item '+(!n.read_at?'unread':'')+'" data-notification-id="'+n.id+'">'+esc(n.message)+'<small>'+esc(date)+(n.read_at?' · Read':' · New')+'</small></button>'}).join(''):'<div class="notify-empty">You are all caught up. New pledge updates will appear here.</div>';
+ panel.innerHTML='<div class="notify-head"><h3>Notifications</h3><button type="button" class="notify-readall" id="markAllRead" '+(unread?'':'disabled')+'>Mark all read</button></div>'+list;
+}
+function renderFilters(){
+ $("filters").innerHTML=["All","Snacks","Beverages","Personal care","Home"].map(function(c){return'<button class="chip" data-c="'+c+'" aria-pressed="'+(c===cat)+'">'+c+'</button>'}).join("");
+}
+function render(){
+ var h="",goals=0,pl=0;
+ items.forEach(function(it){
+  pl+=it.pledged;if(it.status==="in_production"||it.status==="made")goals++;
+  if(cat!=="All"&&it.category!==cat)return;
+  var st=label(it),pc=Math.min(100,Math.round(it.pledged/it.goal*100));
+  h+='<article class="card '+st[0]+'" data-id="'+it.id+'"><div class="pic" style="background:'+(TINT[it.category]||"#eee")+'"><span aria-hidden="true">'+(ICON[it.category]||"")+'</span><span class="tag">'+esc(it.category)+'</span><span class="badge '+st[0]+'">'+st[1]+'</span></div><div class="body"><h3>'+esc(it.name)+'</h3><p class="sub">'+esc(it.description)+'</p>'
+  +'<div class="bar" role="progressbar" aria-valuenow="'+pc+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+pc+'%"></i></div>'
+  +'<div class="row"><span>'+it.pledged+' of '+it.goal+' pledged</span><span class="price">Early-bird ₹'+it.early_bird_price+' <s style="font-weight:400;color:var(--muted)">₹'+it.price+'</s></span></div>'
+  +'<div class="est">'+(it.chance_of_reaching_goal!=null?it.chance_of_reaching_goal+'% chance of reaching goal · ':'')+'Pay only after it is made</div>'
+  +'<div class="acts">'+act(it)+'<button class="btn ghost" data-a="info" data-id="'+it.id+'">Details</button></div></div></article>';
+ });
+ $("list").innerHTML=h||'<p class="note">No concepts in this category yet.</p>';
+ $("s1").textContent=items.length;$("s2").textContent=goals;$("s3").textContent=pl;
+ renderUpdates();renderFounder();
+}
+function renderUpdates(){
+ var h=notes.slice(0,3).map(function(n){return'<li>'+esc(n.message)+'</li>'}).join("");
+ $("updates").innerHTML=h?'<div class="panel" style="max-width:none;margin-bottom:16px;gap:6px"><h3>Updates for you</h3><ul style="margin:0;padding-left:18px">'+h+'</ul></div>':"";
+}
+function renderFounder(){
+ var line={collecting:"Waiting for the goal",missed:"Goal missed",in_production:"Goal reached: in production",made:"Backers have been told it is ready"};
+ $("fl").innerHTML=mine.length?mine.map(function(it){
+  var b=it.status==="made"?'<button class="btn done" disabled>Manufactured</button>':'<button class="btn" data-a="made" data-id="'+it.id+'"'+(it.status==="in_production"?"":" disabled")+'>Mark as manufactured</button>';
+  return'<div class="panel" style="max-width:none;grid-template-columns:1fr auto;align-items:center"><div><h3>'+esc(it.name)+'</h3><p class="note">'+it.pledged+' of '+it.goal+' pledged · '+line[it.status]+'</p></div>'+b+'</div>';
+ }).join(""):'<div class="panel" style="max-width:none"><h3>No products yet</h3><p class="note">Products you list appear here. Once one reaches its goal, you can mark it as manufactured.</p><button class="btn" id="goList" style="justify-self:start">List a product</button></div>';
+}
+function renderAnalytics(){
+ var root=$("analyticsContent");if(!root)return;
+ if(!user||user.role!=="business"){root.innerHTML='<p class="note">Sign in with a business-owner account to view founder analytics.</p>';return}
+ if(!analytics){root.innerHTML='<div class="panel" style="max-width:none"><h3>Analytics are not available yet</h3><p class="note">Try refreshing. Your product and pledge data has not been changed.</p></div>';return}
+ var st=analytics.stats, maxTrend=Math.max(1,...analytics.trend.map(function(x){return x.pledges}));
+ var cards=[['Products listed',st.products],['Total pledges',st.pledges],['Goals reached',st.goals_reached],['Active campaigns',st.active]];
+ var metrics='<div class="metric-grid">'+cards.map(function(c){return'<div class="metric-card"><span>'+c[0]+'</span><strong>'+c[1]+'</strong></div>'}).join('')+'</div>';
+ var trend='<div class="analytics-panel"><div class="section-head"><div><h2>Recent pledge activity</h2><p class="note">Pledges recorded over the last 7 days</p></div></div><div class="trend-chart">'+analytics.trend.map(function(d){var height=Math.max(5,Math.round(d.pledges/maxTrend*100));return'<div class="trend-col"><strong>'+d.pledges+'</strong><div class="trend-track"><i style="height:'+height+'%"></i></div><span>'+esc(d.label)+'</span></div>'}).join('')+'</div></div>';
+ var cats=analytics.categories.length?analytics.categories.map(function(c){var width=Math.max(3,Math.round(c.pledges/Math.max(1,st.pledges)*100));return'<div class="category-row"><div class="row"><b>'+esc(c.category)+'</b><span>'+c.pledges+' pledges · '+c.products+' products</span></div><div class="bar"><i style="width:'+width+'%"></i></div></div>'}).join(''):'<p class="note">Your category insights will appear after you list a product.</p>';
+ var pred=analytics.predictions.length?analytics.predictions.map(function(x){var chance=x.chance==null?0:x.chance;var source=x.history_count?('Adjusted using '+x.history_count+' of your completed campaigns in this category ('+x.history_successes+' reached goal).'):'No completed campaigns in this category yet; showing the experimental baseline model.';return'<div class="prediction-row"><div class="prediction-copy"><b>'+esc(x.name)+'</b><span>'+x.pledged+' of '+x.goal+' pledges</span><span>'+esc(source)+'</span></div><div class="prediction-score"><strong>'+chance+'%</strong><div class="bar"><i style="width:'+chance+'%"></i></div></div></div>'}).join(''):'<p class="note">No active campaigns to predict right now. New collecting products will appear here.</p>';
+ var products=analytics.products.length?analytics.products.map(function(x){var pc=Math.min(100,Math.round(x.pledged/Math.max(1,x.goal)*100));return'<div class="product-analytics"><div class="row"><b>'+esc(x.name)+'</b><span>'+x.pledged+' / '+x.goal+'</span></div><div class="bar"><i style="width:'+pc+'%"></i></div><small>'+esc(x.status.replace('_',' '))+'</small></div>'}).join(''):'<p class="note">No products listed yet.</p>';
+ root.innerHTML=metrics+'<div class="analytics-grid"><div class="analytics-panel">'+trend+'</div><div class="analytics-panel"><h2>Demand by category</h2><p class="note">Based on your recorded pledges</p>'+cats+'</div><div class="analytics-panel"><h2>AI demand estimates</h2><p class="note">Experimental estimates for active campaigns</p>'+pred+'<p class="disclaimer">Experimental estimates combine the synthetic-data baseline model with your own completed campaign outcomes in the same category when available. The history adjustment uses a small prior to avoid overreacting to a few campaigns. This is an early prototype, not a validated forecast; small samples can be misleading.</p></div><div class="analytics-panel"><h2>Campaign performance</h2><p class="note">Progress across your listed products</p>'+products+'</div></div><p class="note demo-note">Demo payment records: '+st.demo_payments+'. Payments in this project are simulated; no real money is processed.</p>';
+}
+async function loadAnalytics(){var a=await api("GET","/api/owner/analytics");analytics=a.ok?a.data:null;renderAnalytics();if(!a.ok)toast(a.data.error||"Could not refresh analytics")}
+
+async function loadRecommendations(){
+ var box=$("recommendations");if(!user||user.role!=="customer"){box.hidden=true;return}
+ var r=await api("GET","/api/recommendations");if(!r.ok||!r.data.items.length){box.hidden=true;return}
+ box.hidden=false;box.innerHTML='<h3 style="margin-bottom:5px">Recommended for you</h3><p class="note">'+esc(r.data.reason)+' · '+esc(r.data.category||"")+'</p><div class="row" style="justify-content:flex-start;flex-wrap:wrap;gap:12px">'+r.data.items.map(function(x){return'<span><b>'+esc(x.name)+'</b> · ₹'+x.early_bird_price+'</span>'}).join('')+'</div>';
+}
+
+
+async function refresh(){
+ var r=await api("GET","/api/products");if(r.ok)items=r.data;
+ if(user){
+  var n=await api("GET","/api/notifications");notes=n.ok?n.data:[];renderNotifications();
+  if(user.role==="business"){
+   var o=await api("GET","/api/owner/products");mine=o.ok?o.data:[];
+   var a=await api("GET","/api/owner/analytics");analytics=a.ok?a.data:null;
+  }
+ }
+ render();renderAnalytics();await loadRecommendations();
+}
+function row(l,v){return'<tr><td>'+esc(l)+'</td><td>'+esc(v)+'</td></tr>'}
+function openInfo(id){
+ var it=items.filter(function(x){return x.id===id})[0];if(!it)return;
+ var st=label(it),pc=Math.min(100,Math.round(it.pledged/it.goal*100)),none="Not added by the founder yet.";
+ var facts=(it.facts||"").split("\n").filter(Boolean).map(function(l){var p=l.split("|");return row(p[0],p[1]||"")}).join("");
+ var h='<div class="ihead"><div class="em" style="background:'+(TINT[it.category]||"#eee")+'">'+(ICON[it.category]||"")+'</div><div><h2>'+esc(it.name)+'</h2><p class="sub">'+esc(it.category)+' · ₹'+it.price+' per pack</p></div></div>'
+ +'<p style="margin:0 0 10px">'+esc(it.description)+'</p>'
+ +'<div class="bar"><i style="width:'+pc+'%"></i></div><div class="row" style="margin-top:6px"><span>'+it.pledged+' of '+it.goal+' pledged</span><span>'+st[1]+'</span></div>'
+ +'<div class="sec"><h3>How it is made</h3><p class="sub">'+esc(it.how_made||none)+'</p></div>'
+ +'<div class="sec"><h3>Ingredients and materials</h3><p class="sub">'+esc(it.ingredients||none)+'</p></div>'
+ +'<div class="sec"><h3>Packaging</h3><p class="sub">'+esc(it.packaging||none)+'</p></div>'
+ +'<div class="sec"><h3>What the pack will show</h3><div class="label"><table>'+row("Product",it.name)+row("Net quantity",it.net_quantity||"To be decided")+row("MRP","₹"+it.price+" (incl. all taxes)")+row("Shelf life",it.shelf_life||"To be decided")+facts+'</table></div></div>'
+ +'<p class="note" style="margin-top:12px">Early-bird price for backers: ₹'+it.early_bird_price+' instead of ₹'+it.price+' (15% off). You pay nothing now. If the goal is reached, the product goes into production. Once it is made, we tell you and you pay this amount to get it.</p>'
+ +'<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px"><button class="btn ghost" id="ix">Close</button>'+act(it)+'</div>';
+ $("idlg").innerHTML=h;$("idlg").showModal();
+}
+async function doAct(a,id){
+ if(!user && a==="pledge"){requestAuth({type:"pledge",id:id});return}
+ if(a==="pay"){pendingPayId=id;$("paydlg").showModal();return}
+ var r=await api("POST","/api/products/"+id+"/"+a);
+ if(!r.ok){toast(r.data.error||"Something went wrong");if(r.status===401){user=null;renderWho();applyRole();$("dlg").showModal()}return}
+ if(a==="pledge")toast(r.data.goal_reached?"Goal reached! The product was sent for production":"Pledged. Nothing is charged now");
+ else if(a==="pay")toast("Demo payment complete. No money was charged.");
+ else toast("Marked as manufactured. Backers have been told");
+ await refresh();
+}
+function applyRole(){
+ var ok=user?ROLE_VIEWS[user.role]:["explore","list","how"];
+ document.querySelectorAll(".link").forEach(function(l){l.hidden=ok.indexOf(l.dataset.view)<0});
+}
+function requestAuth(action){
+ pendingAction=action||null;
+ if(action==="business"){
+  setMode("up");
+  var business=document.querySelector('input[name="role"][value="business"]');
+  if(business)business.checked=true;
+ }else{setMode("in")}
+ $("dlg").showModal();
+}
+function show(v){
+ ["explore","list-view","founder-view","analytics-view","how"].forEach(function(s){$(s).hidden=(s!==(v==="list"?"list-view":v==="founder"?"founder-view":v==="analytics"?"analytics-view":v))});
+ document.querySelectorAll(".link").forEach(function(l){l.removeAttribute("aria-current");if(l.dataset.view===v)l.setAttribute("aria-current","page")});
+}
+function setMode(m){
+ mode=m;$("rolebox").hidden=$("nbox").hidden=(m!=="up");$("ln").required=(m==="up");
+ $("atitle").textContent=m==="up"?"Create your account":"Welcome back";
+ $("lp").autocomplete=m==="up"?"new-password":"current-password";$("aerr").textContent="";
+ document.querySelectorAll("[data-m]").forEach(function(b){b.setAttribute("aria-pressed",b.dataset.m===m)});
+}
+async function enter(){renderWho();applyRole();show("explore");await refresh()}
+
+$("seg").addEventListener("click",function(e){var b=e.target.closest("[data-m]");if(b)setMode(b.dataset.m)});
+$("dlg").addEventListener("cancel",function(){pendingAction=null});
+$("lf").addEventListener("submit",async function(e){
+ e.preventDefault();$("aerr").textContent="";
+ var body={email:$("le").value,password:$("lp").value};
+ if(mode==="up"){body.name=$("ln").value;body.role=document.querySelector('input[name="role"]:checked').value}
+ var r=await api("POST",mode==="up"?"/api/register":"/api/login",body);
+ if(!r.ok){$("aerr").textContent=r.data.error||"Something went wrong";return}
+ user=r.data;var nextAction=pendingAction;pendingAction=null;$("dlg").close();$("lf").reset();setMode("in");
+ await enter();
+ if(nextAction==="business"&&user.role==="business")show("list");
+ if(nextAction&&nextAction.type==="pledge"&&user.role==="customer")await doAct("pledge",nextAction.id);
+ toast("Signed in as "+user.name+(user.role==="business"?" (business owner)":""));
+});
+$("who").addEventListener("click",async function(e){
+ if(e.target.id==="in")$("dlg").showModal();
+ if(e.target.id==="out"){
+  await api("POST","/api/logout");user=null;mine=[];notes=[];$("notificationPanel").hidden=true;
+  renderWho();applyRole();show("explore");await refresh();
+ }
+});
+$("list").addEventListener("click",function(e){
+ var b=e.target.closest("button"),c=e.target.closest(".card");
+ if(b&&b.disabled)return;
+ if(b&&(b.dataset.a==="pledge"||b.dataset.a==="pay")){doAct(b.dataset.a,+b.dataset.id);return}
+ if(c)openInfo(+c.dataset.id);
+});
+$("idlg").addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b||b.disabled)return;
+ if(b.id==="ix"){this.close();return}
+ if(b.dataset.a==="pledge"||b.dataset.a==="pay"){this.close();doAct(b.dataset.a,+b.dataset.id)}
+});
+$("fl").addEventListener("click",function(e){
+ var b=e.target.closest("button");if(!b||b.disabled)return;
+ if(b.id==="goList"){show("list");return}
+ if(b.dataset.a==="made")doAct("manufactured",+b.dataset.id);
+});
+$("who").addEventListener("click",async function(e){
+ if(e.target.closest("#notifyToggle")){var panel=$("notificationPanel"),open=panel.hidden;panel.hidden=!open;$("notifyToggle").setAttribute("aria-expanded",String(open));if(open){var n=await api("GET","/api/notifications");if(n.ok){notes=n.data;renderNotifications()}}return}
+});
+$("notificationPanel").addEventListener("click",async function(e){
+ var item=e.target.closest("[data-notification-id]");
+ if(item){var id=Number(item.dataset.notificationId);var r=await api("POST","/api/notifications/read",{ids:[id]});if(r.ok){notes=notes.map(function(n){return n.id===id?Object.assign({},n,{read_at:Math.floor(Date.now()/1000)}):n});renderNotifications()}return}
+ if(e.target.id==="markAllRead"){var r=await api("POST","/api/notifications/read",{all:true});if(r.ok){var stamp=Math.floor(Date.now()/1000);notes=notes.map(function(n){return Object.assign({},n,{read_at:n.read_at||stamp})});renderNotifications()}}
+});
+$("filters").addEventListener("click",function(e){var b=e.target.closest(".chip");if(b){cat=b.dataset.c;renderFilters();render()}});
+$("f").addEventListener("submit",async function(e){
+ e.preventDefault();
+ var r=await api("POST","/api/products",{name:$("fn").value,category:$("fc").value,price:$("fp").value,goal:$("fg").value,factory_cost:$("fk").value,description:$("fd").value,how_made:$("fh").value,ingredients:$("fi").value,packaging:$("fpk").value});
+ if(!r.ok){toast(r.data.error||"Could not publish");return}
+ e.target.reset();$("fp").value=30;$("fg").value=200;$("fk").value=150000;
+ show("explore");await refresh();toast("Published");
+});
+document.querySelector(".links").addEventListener("click",function(e){var l=e.target.closest(".link");if(l){if(l.dataset.view==="list"&&!user){requestAuth("business");return}show(l.dataset.view);if(l.dataset.view==="analytics")loadAnalytics()}});
+$("refreshAnalytics").addEventListener("click",loadAnalytics);
+$("cancelPay").addEventListener("click",function(){$("paydlg").close();pendingPayId=null});
+$("confirmPay").addEventListener("click",async function(){
+ if(!pendingPayId)return;
+ var id=pendingPayId;pendingPayId=null;$("paydlg").close();
+ var r=await api("POST","/api/products/"+id+"/pay",{method:$("demoMethod").value});
+ if(!r.ok){toast(r.data.error||"Demo payment failed");return}
+ toast("Demo payment successful · ₹"+r.data.amount+" · No money charged");await refresh();
+});
+setInterval(async function(){if(!user)return;var n=await api("GET","/api/notifications");if(n.ok){notes=n.data;renderNotifications();renderUpdates()}},30000);
+(async function(){
+ renderFilters();renderWho();applyRole();
+ var r=await api("GET","/api/me");
+ if(r.ok){user=r.data;await enter()}else{show("explore");await refresh()}
+})();
+</script>
+</body>
+</html>
